@@ -4,8 +4,8 @@ from typing import List
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/hotel_booking"
-    DATABASE_URL_SYNC: str = "postgresql://postgres:password@localhost:5432/hotel_booking"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:123456@172.30.219.23:5432/hotel_booking"
+    DATABASE_URL_SYNC: str = "postgresql://postgres:123456@172.30.219.23:5432/hotel_booking"
     
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production-min-32-characters-long"
