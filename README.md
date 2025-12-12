@@ -58,7 +58,7 @@
 
 ## Установка и запуск
 
-### ⚡ Для быстрого старта см. файл [QUICK_START.md](QUICK_START.md)
+### ⚡ [QUICK_START.md](QUICK_START.md)
 
 ### Предварительные требования
 
@@ -66,95 +66,15 @@
 - PostgreSQL 14+
 - pip
 
-### 1. Клонирование репозитория
-
-```bash
-git clone <repository-url>
-cd КП_БД
-```
-
-### 2. Настройка базы данных
-
-**ВАЖНО:** База данных не пушится на GitHub! Нужно создать её локально.
-
-#### Автоматическая настройка (рекомендуется):
-
-```bash
-# Для macOS/Linux
-chmod +x setup_database.sh
-./setup_database.sh
-
-# Для Windows используйте Git Bash
-```
-
-#### Ручная настройка:
-
-```bash
-# Создайте БД в PostgreSQL (или используйте существующую 'postgres')
-psql -U postgres
-CREATE DATABASE postgres;
-\q
-
-# Выполните скрипты инициализации по порядку
-psql -U postgres -d postgres -f database/init_schema.sql
-psql -U postgres -d postgres -f database/01_migration_add_users.sql
-psql -U postgres -d postgres -f database/02_triggers.sql
-psql -U postgres -d postgres -f database/03_views.sql
-psql -U postgres -d postgres -f database/04_functions.sql
-psql -U postgres -d postgres -f database/05_test_data.sql
-```
-
-**Все SQL-скрипты находятся в папке `database/` и ВХОДЯТ В РЕПОЗИТОРИЙ.**
-
-### 3. Настройка backend
-
-```bash
-cd backend
-
-# Создайте виртуальное окружение
-python3 -m venv venv
-source venv/bin/activate  # Linux/Mac
-# или
-venv\Scripts\activate  # Windows
-
-# Установите зависимости
-pip install -r requirements.txt
-
-# Настройте переменные окружения
-cp .env.example .env
-# Отредактируйте .env файл с вашими настройками БД
-
-# Запустите сервер
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 4. Запуск frontend
-
-```bash
-# Откройте frontend/index.html в браузере
-# или используйте локальный сервер:
-cd frontend
-python3 -m http.server 3000
-```
-
-Приложение будет доступно:
-- Backend API: http://localhost:8000
-- API документация: http://localhost:8000/docs
-- Frontend: http://localhost:3000
-
 ## Тестовые пользователи
 
 После загрузки тестовых данных доступны следующие пользователи:
 
-| Роль | Email | Пароль |
-|------|-------|--------|
-| Системный админ | admin@hotel.com | admin123 |
-| Админ отеля | hotel_admin@hotel.com | hotel123 |
-| Гость | guest@example.com | guest123 |
-
-## Разработка
-
-Проект разрабатывается командой из 2 человек.
+| Роль            | Email                 | Пароль   |
+| --------------- | --------------------- | -------- |
+| Системный админ | admin@hotel.com       | admin123 |
+| Админ отеля     | hotel_admin@hotel.com | hotel123 |
+| Гость           | guest@example.com     | guest123 |
 
 ## Авторы
 

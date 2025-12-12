@@ -21,7 +21,6 @@ class UserInfo(BaseModel):
 
 class ReviewCreateRequest(BaseModel):
     booking_id: int
-    hotel_id: int
     rating: int = Field(ge=1, le=5)
     comment: Optional[str] = None
 
@@ -31,7 +30,6 @@ class ReviewUpdateRequest(BaseModel):
 
 class ReviewResponse(BaseModel):
     review_id: int
-    hotel_id: int
     user_id: int
     rating: int
     comment: Optional[str]
@@ -51,10 +49,13 @@ async def get_hotel_reviews(
     """Получить все отзывы об отеле с информацией о пользователях"""
     from sqlalchemy.orm import selectinload
     
+    # Получаем отзывы через JOIN с bookings и rooms для фильтрации по hotel_id
     result = await db.execute(
         select(Review)
         .options(selectinload(Review.user))
-        .where(Review.hotel_id == hotel_id)
+        .join(Booking, Review.booking_id == Booking.booking_id)
+        .join(Room, Booking.room_id == Room.room_id)
+        .where(Room.hotel_id == hotel_id)
         .order_by(Review.created_at.desc())
     )
     reviews = result.scalars().all()
@@ -86,17 +87,24 @@ async def create_review(
     """Создать отзыв (только для завершенных бронирований)"""
     # Проверяем, что бронирование существует и принадлежит пользователю
     booking_result = await db.execute(
-        select(Booking)
+        select(Booking, Room.hotel_id)
         .join(Room, Booking.room_id == Room.room_id)
         .where(
             and_(
                 Booking.booking_id == review_data.booking_id,
-                Booking.user_id == current_user.user_id,
-                Room.hotel_id == review_data.hotel_id
+                Booking.user_id == current_user.user_id
             )
         )
     )
-    booking = booking_result.scalar_one_or_none()
+    result_row = booking_result.first()
+    
+    if not result_row:
+        raise HTTPException(
+            status_code=404,
+            detail="Бронирование не найдено"
+        )
+    
+    booking, hotel_id = result_row
     
     if not booking:
         raise HTTPException(
@@ -123,11 +131,30 @@ async def create_review(
             detail="Отзыв уже оставлен для этого бронирования"
         )
     
+    # Проверяем, нет ли уже отзыва на этот отель от этого пользователя
+    existing_hotel_review = await db.execute(
+        select(Review)
+        .join(Booking, Review.booking_id == Booking.booking_id)
+        .join(Room, Booking.room_id == Room.room_id)
+        .where(
+            and_(
+                Review.user_id == current_user.user_id,
+                Room.hotel_id == hotel_id
+            )
+        )
+    )
+    existing_hotel_review_result = existing_hotel_review.scalar_one_or_none()
+    
+    if existing_hotel_review_result:
+        raise HTTPException(
+            status_code=400,
+            detail="Вы уже оставляли отзыв для этого отеля"
+        )
+    
     # Создаем отзыв
     new_review = Review(
         booking_id=review_data.booking_id,
         user_id=current_user.user_id,
-        hotel_id=review_data.hotel_id,
         rating=review_data.rating,
         comment=review_data.comment
     )

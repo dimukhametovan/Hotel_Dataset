@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from ..core.database import Base
 
 
-# Связующая таблица для many-to-many отношения Room-Amenity
+# связующая таблица
 room_amenities = Table(
     'room_amenities',
     Base.metadata,

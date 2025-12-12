@@ -1,7 +1,7 @@
 from .user import User, UserRole
 from .hotel import Hotel
 from .room import Room, RoomType, Amenity, room_amenities
-from .booking import Booking, Review, Guest
+from .booking import Booking, Review
 
 __all__ = [
     "User",

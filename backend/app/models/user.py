@@ -24,7 +24,6 @@ class User(Base):
     phone = Column(String(20))
     role = Column(SQLEnum(UserRole, name="user_role"), nullable=False, default=UserRole.guest)
     is_active = Column(Boolean, default=True)
-    guest_id = Column(Integer)
     hotel_id = Column(Integer)  # Для привязки hotel_admin к отелю
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))

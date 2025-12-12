@@ -189,6 +189,30 @@ COMMENT ON COLUMN bookings.user_id IS 'Пользователь из новой 
 COMMENT ON COLUMN reviews.is_approved IS 'Отзыв одобрен администратором отеля';
 
 -- ============================================
+-- Добавление таблицы navigation_items и пункта "Выгрузка отчетов"
+-- ============================================
+CREATE TABLE IF NOT EXISTS navigation_items (
+    nav_id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    route VARCHAR(255) NOT NULL UNIQUE,       -- URL/маршрут страницы
+    roles user_role[] DEFAULT NULL,           -- NULL = доступно всем ролям (можно изменить позже)
+    is_visible BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_navigation_route ON navigation_items(route);
+CREATE INDEX IF NOT EXISTS idx_navigation_roles ON navigation_items(roles);
+
+-- Вставляем пункт навигации "Выгрузка отчетов" только если такого route ещё нет
+INSERT INTO navigation_items (title, route, roles, is_visible)
+SELECT 'Выгрузка отчетов', '/reports/export', NULL, TRUE
+WHERE NOT EXISTS (SELECT 1 FROM navigation_items n WHERE n.route = '/reports/export');
+
+COMMENT ON TABLE navigation_items IS 'Пункты навигации — заголовок, маршрут и список ролей, которым доступен пункт. roles NULL = доступно всем ролям';
+COMMENT ON COLUMN navigation_items.roles IS 'Массив ролей (user_role[]) или NULL для общего доступа';
+
+-- ============================================
 -- ИНФОРМАЦИЯ О ТЕСТОВЫХ ПОЛЬЗОВАТЕЛЯХ
 -- ============================================
 -- Email: admin@hotel.com | Пароль: admin123 | Роль: Системный администратор
