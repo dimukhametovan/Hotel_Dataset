@@ -1,206 +1,308 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Управление отелями - Системный администратор</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
-        <div class="container">
-            <a class="navbar-brand" href="system-admin.html">
-                <i class="bi bi-shield-lock me-2"></i>Системное управление
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="system-admin.html">
-                            <i class="bi bi-speedometer2 me-1"></i>Панель управления
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="system-hotels.html">
-                            <i class="bi bi-building me-1"></i>Отели
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="system-users.html">
-                            <i class="bi bi-people me-1"></i>Пользователи
-                        </a>
-                    </li>
-                    <li class="nav-item d-none" id="user-info-item">
-                        <span class="nav-link">
-                            <i class="bi bi-person-circle"></i>
-                            <span id="user-name"></span>
-                        </span>
-                    </li>
-                    <li class="nav-item d-none" id="logout-item">
-                        <a class="nav-link" href="#" id="nav-logout">
-                            <i class="bi bi-box-arrow-right me-1"></i>Выход
-                        </a>
-                    </li>
-                </ul>
-            </div>
+      <div class="container">
+        <a class="navbar-brand" href="system-admin.html">
+          <i class="bi bi-shield-lock me-2"></i>Системное управление
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="system-admin.html">
+                <i class="bi bi-speedometer2 me-1"></i>Панель управления
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="system-hotels.html">
+                <i class="bi bi-house-door me-1"></i>Отели
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="system-users.html">
+                <i class="bi bi-people me-1"></i>Пользователи
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="system-reports.html">
+                <i class="bi bi-file-earmark-arrow-down me-1"></i>Выгрузка
+                отчетов
+              </a>
+            </li>
+            <li class="nav-item d-none" id="user-info-item">
+              <span class="nav-link">
+                <i class="bi bi-person-circle"></i>
+                <span id="user-name"></span>
+              </span>
+            </li>
+            <li class="nav-item d-none" id="logout-item">
+              <a class="nav-link" href="#" id="nav-logout">
+                <i class="bi bi-box-arrow-right me-1"></i>Выход
+              </a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <!-- Основной контент -->
     <div class="container my-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>
-                <i class="bi bi-building me-2"></i>Управление отелями
-            </h1>
-            <button class="btn btn-primary btn-lg" id="add-hotel-btn">
-                <i class="bi bi-plus-circle me-2"></i>Добавить отель
-            </button>
-        </div>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-building me-2"></i>Управление отелями</h1>
+        <button class="btn btn-primary btn-lg" id="add-hotel-btn">
+          <i class="bi bi-plus-circle me-2"></i>Добавить отель
+        </button>
+      </div>
 
-        <!-- Фильтры и поиск -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" id="search-hotel" placeholder="Поиск по названию или городу...">
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select" id="filter-status">
-                            <option value="all">Все отели</option>
-                            <option value="active">Активные</option>
-                            <option value="inactive">Неактивные</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-outline-secondary w-100" id="reset-filters">
-                            <i class="bi bi-x-circle me-1"></i>Сбросить
-                        </button>
-                    </div>
-                </div>
+      <!-- Фильтры и поиск -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="search-hotel"
+                placeholder="Поиск по названию или городу..."
+              />
             </div>
+            <div class="col-md-3">
+              <select class="form-select" id="filter-status">
+                <option value="all">Все отели</option>
+                <option value="active">Активные</option>
+                <option value="inactive">Неактивные</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button
+                class="btn btn-outline-secondary w-100"
+                id="reset-filters"
+              >
+                <i class="bi bi-x-circle me-1"></i>Сбросить
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Список отелей -->
-        <div id="hotels-list">
-            <div class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Загрузка...</span>
-                </div>
-            </div>
+      <!-- Список отелей -->
+      <div id="hotels-list">
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Модальное окно добавления/редактирования отеля -->
     <div class="modal fade" id="hotelModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="hotelModalTitle">Добавить отель</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="hotelModalTitle">Добавить отель</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="hotel-form">
+              <input type="hidden" id="hotel-id" />
+
+              <div class="row g-3">
+                <div class="col-md-8">
+                  <label for="hotel-name" class="form-label"
+                    >Название отеля *</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="hotel-name"
+                    required
+                  />
                 </div>
-                <div class="modal-body">
-                    <form id="hotel-form">
-                        <input type="hidden" id="hotel-id">
-                        
-                        <div class="row g-3">
-                            <div class="col-md-8">
-                                <label for="hotel-name" class="form-label">Название отеля *</label>
-                                <input type="text" class="form-control" id="hotel-name" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="hotel-stars" class="form-label">Звезды</label>
-                                <select class="form-select" id="hotel-stars">
-                                    <option value="">Не указано</option>
-                                    <option value="1">1 звезда</option>
-                                    <option value="2">2 звезды</option>
-                                    <option value="3">3 звезды</option>
-                                    <option value="4">4 звезды</option>
-                                    <option value="5">5 звезд</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label for="hotel-city" class="form-label">Город *</label>
-                                <input type="text" class="form-control" id="hotel-city" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="hotel-country" class="form-label">Страна *</label>
-                                <input type="text" class="form-control" id="hotel-country" required>
-                            </div>
-                        </div>
-
-                        <div class="mt-3">
-                            <label for="hotel-address" class="form-label">Адрес *</label>
-                            <input type="text" class="form-control" id="hotel-address" required>
-                        </div>
-
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label for="hotel-phone" class="form-label">Телефон</label>
-                                <input type="tel" class="form-control" id="hotel-phone" placeholder="+7 (xxx) xxx-xx-xx">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="hotel-email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="hotel-email" placeholder="hotel@example.com">
-                            </div>
-                        </div>
-
-                        <div class="mt-3">
-                            <label for="hotel-description" class="form-label">Описание</label>
-                            <textarea class="form-control" id="hotel-description" rows="3"></textarea>
-                        </div>
-
-                        <div class="mt-3">
-                            <label for="hotel-admin" class="form-label">Администратор отеля</label>
-                            <select class="form-select" id="hotel-admin">
-                                <option value="">Не назначен</option>
-                            </select>
-                            <small class="text-muted">Можно назначить позже</small>
-                        </div>
-
-                        <div class="mt-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="hotel-active" checked>
-                                <label class="form-check-label" for="hotel-active">
-                                    Отель активен
-                                </label>
-                            </div>
-                        </div>
-                    </form>
+                <div class="col-md-4">
+                  <label for="hotel-stars" class="form-label">Звезды</label>
+                  <select class="form-select" id="hotel-stars">
+                    <option value="">Не указано</option>
+                    <option value="1">1 звезда</option>
+                    <option value="2">2 звезды</option>
+                    <option value="3">3 звезды</option>
+                    <option value="4">4 звезды</option>
+                    <option value="5">5 звезд</option>
+                  </select>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" id="save-hotel-btn">Сохранить</button>
+              </div>
+
+              <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                  <label for="hotel-city" class="form-label">Город *</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="hotel-city"
+                    required
+                  />
                 </div>
-            </div>
+                <div class="col-md-6">
+                  <label for="hotel-country" class="form-label">Страна *</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="hotel-country"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label for="hotel-address" class="form-label">Адрес *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="hotel-address"
+                  required
+                />
+              </div>
+
+              <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                  <label for="hotel-phone" class="form-label">Телефон</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="hotel-phone"
+                    placeholder="+7 (xxx) xxx-xx-xx"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="hotel-email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="hotel-email"
+                    placeholder="hotel@example.com"
+                  />
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label for="hotel-description" class="form-label"
+                  >Описание</label
+                >
+                <textarea
+                  class="form-control"
+                  id="hotel-description"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="mt-3">
+                <label for="hotel-admin" class="form-label"
+                  >Администратор отеля</label
+                >
+                <select class="form-select" id="hotel-admin">
+                  <option value="">Не назначен</option>
+                </select>
+                <small class="text-muted">Можно назначить позже</small>
+              </div>
+
+              <div class="mt-3">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="hotel-active"
+                    checked
+                  />
+                  <label class="form-check-label" for="hotel-active">
+                    Отель активен
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button type="button" class="btn btn-primary" id="save-hotel-btn">
+              Сохранить
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Модальное окно подтверждения удаления -->
     <div class="modal fade" id="deleteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Подтверждение удаления</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Вы действительно хотите удалить отель <strong id="delete-hotel-name"></strong>?</p>
-                    <p class="text-danger">Это действие нельзя будет отменить. Все связанные данные (номера, бронирования) также будут удалены.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-danger" id="confirm-delete-btn">Удалить</button>
-                </div>
-            </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Подтверждение удаления</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Вы действительно хотите удалить отель
+              <strong id="delete-hotel-name"></strong>?
+            </p>
+            <p class="text-danger">
+              Это действие нельзя будет отменить. Все связанные данные (номера,
+              бронирования) также будут удалены.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirm-delete-btn"
+            >
+              Удалить
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -209,25 +311,27 @@
     <script src="js/auth.js"></script>
     <script src="js/system-hotels.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = Auth.getCurrentUser();
-            if (!user || user.role !== 'system_admin') {
-                window.location.href = 'index.html';
-                return;
-            }
+      document.addEventListener("DOMContentLoaded", () => {
+        const user = Auth.getCurrentUser();
+        if (!user || user.role !== "system_admin") {
+          window.location.href = "index.html";
+          return;
+        }
 
-            document.getElementById('user-info-item').classList.remove('d-none');
-            document.getElementById('logout-item').classList.remove('d-none');
-            document.getElementById('user-name').textContent = `${user.first_name} ${user.last_name}`;
+        document.getElementById("user-info-item").classList.remove("d-none");
+        document.getElementById("logout-item").classList.remove("d-none");
+        document.getElementById(
+          "user-name"
+        ).textContent = `${user.first_name} ${user.last_name}`;
 
-            document.getElementById('nav-logout').addEventListener('click', (e) => {
-                e.preventDefault();
-                Auth.logout();
-            });
-
-            // Инициализация
-            systemHotels.init();
+        document.getElementById("nav-logout").addEventListener("click", (e) => {
+          e.preventDefault();
+          Auth.logout();
         });
+
+        // Инициализация
+        systemHotels.init();
+      });
     </script>
-</body>
+  </body>
 </html>
